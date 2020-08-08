@@ -1,0 +1,43 @@
+﻿body {
+    padding: 10px;
+}
+
+.small-box {
+    width: 80px !important;
+}
+.medium-box {
+    width: 200px !important;
+}
+.large-box {
+    width: 400px !important;
+}
+
+
+.auto-size {
+    width: auto;
+}
+@media screen and (max-width: 600px) {
+    .small-box {
+        width: 100% !important;
+    }
+    .medium-box {
+        width: 100% !important;
+    }
+    .large-box {
+        width: 100% !important;
+    }
+}
+
+.pad2 {
+    margin-bottom: 2px !important;
+}
+.pad1 {
+    margin-bottom: 1px !important;
+}
+
+.red{
+    color: red;
+}
+.orange{
+    color:orange;
+}

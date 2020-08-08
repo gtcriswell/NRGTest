@@ -1,0 +1,24 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Master_Page.master.cs" Inherits="NRGTest.Master_Page" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <link href="Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/jquery-3.0.0.min.js"></script>
+    <script src="Scripts/jquery-ui-1.12.1.min.js"></script>
+
+</head>
+<body>
+    <form id="form1" runat="server" autocomplete="off">
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
