@@ -121,15 +121,21 @@
                     <asp:TextBox ID="txtSSN" class="form-control" ValidationGroup="form" placeholder="###-##-####" runat="server" TextMode="Password"></asp:TextBox>
                 </div>
                 <div class="form-group col-md-3 pad1">
-                    <label>Birth Day&nbsp<asp:CustomValidator CssClass="red" ID="cv_birthdate" Enabled="true" ValidateEmptyText="true" ValidationGroup="form" runat="server" Text="*" ControlToValidate="txtBirthDate" ErrorMessage="Invalid Birth Date" OnServerValidate="cv_birthdate_ServerValidate"></asp:CustomValidator></label>
+                    <label>Date of Birth&nbsp<asp:CustomValidator CssClass="red" ID="cv_birthdate" Enabled="true" ValidateEmptyText="true" ValidationGroup="form" runat="server" Text="*" ControlToValidate="txtBirthDate" ErrorMessage="Invalid Birth Date" OnServerValidate="cv_birthdate_ServerValidate"></asp:CustomValidator></label>
                     <asp:TextBox ID="txtBirthDate" class="form-control" ValidationGroup="form" placeholder="mm/dd/yyyy" runat="server"></asp:TextBox>
                 </div>
             </div>
             <div class="form-row align-items-center justify-content-center">
-                <div class="col-md-* col-sm-* pad1">
+                <div class="col-12 pad1">
+                  
                     <br />
                     <asp:Button ID="btnSaveRegistration" CausesValidation="true" runat="server" ValidationGroup="form" CssClass="btn btn-primary" Text="Complete Registration" OnClick="btnSaveRegistration_Click" />
-                    &nbsp;<a href="Register.aspx" class="btn btn-primary">Clear Form</a>
+                    &nbsp;<a href="Register.aspx" class="btn btn-primary">Clear Form</a> &nbsp; &nbsp;  <asp:Label ID="lblMessage" class="align-content-center text-info" runat="server" Text=""></asp:Label>
+                    <br />
+
+
+
+
                     <asp:ValidationSummary CssClass="orange" ID="ValidationSummary1" ValidationGroup="form" runat="server" />
                 </div>
             </div>
@@ -141,11 +147,9 @@
     <div class="row">
         <div class="col-3"></div>
         <div class="col-6">
-            <div class="form-row align-items-center justify-content-center">
-                <div class="col-md-* col-sm-* pad1">
+
                     <h6>Currently Registered</h6>
-                </div>
-            </div>
+
             <input id="txtSearch" name="txtSearch" onkeyup="LoadRegistrations();" placeholder="Start typing to filter by name or email ..." class="form-control" type="text" />
             <br />
             <div id="dvRegistrations">

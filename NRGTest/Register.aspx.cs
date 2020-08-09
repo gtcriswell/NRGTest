@@ -15,6 +15,8 @@ namespace NRGTest
         {
             if (!IsPostBack)
             {
+                lblMessage.Text = "";
+
                 if (Request.QueryString["action"] != null)
                 {
                     if (Request.QueryString["action"] == "edit")
@@ -55,13 +57,10 @@ namespace NRGTest
                 registrations.Zip = txtZip.Text;
                 registrations.UID = registrations.Save(Context);
 
-                string url = Request.Url.AbsoluteUri;
-                if (!String.IsNullOrEmpty(Request.Url.Query))
-                {
-                    url = url.Replace(Request.Url.Query, String.Empty);
-                }
+                //clear form
+                LoadData("0");
 
-                Response.Redirect(url);
+                lblMessage.Text= registrations.FullName + " Updated";
             }
             else
             {
@@ -69,6 +68,7 @@ namespace NRGTest
                 txtSSN.Attributes.Add("value", txtSSN.Text);
             }
         }
+
 
         #region private methods
 
