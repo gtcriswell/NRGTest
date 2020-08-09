@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using NRGBusiness;
 using NRGClasses;
+using NRGTest.UserControls;
 
 namespace NRGTest
 {
@@ -13,7 +18,23 @@ namespace NRGTest
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            LoadData("3");
+            if (!IsPostBack)
+            {
+                if (Request.QueryString["action"] != null)
+                {
+                    if (Request.QueryString["action"] == "edit")
+                    {
+                        if (Request.QueryString["uid"] != null)
+                        {
+                            string UID = Request.QueryString["uid"].ToString();
+                            {
+                                LoadData(UID);
+                            }
+                        }
+                    }
+                }
+
+            }
         }
 
 
@@ -23,8 +44,10 @@ namespace NRGTest
 
             if (Page.IsValid)
             {
-                Registrations registrations = new Registrations();
-                registrations.Load(Utility.ConvInt(hfUID.Value));
+                Registrations registrations = new Registrations(this.Context);
+                registrations = registrations.Load(Utility.ConvInt(hfUID.Value));
+                registrations.UID = Utility.ConvInt(hfUID.Value);
+
                 registrations.Address1 = txtAdd1.Text;
                 registrations.Address2 = txtAdd2.Text;
                 registrations.City = txtCity.Text;
@@ -35,8 +58,15 @@ namespace NRGTest
                 registrations.SSN = txtSSN.Text;
                 registrations.StateCode = ddlState.SelectedValue;
                 registrations.Zip = txtZip.Text;
-                registrations.UID = registrations.Save();
+                registrations.UID = registrations.Save(this.Context);
 
+                string url = Request.Url.AbsoluteUri;
+                if (!String.IsNullOrEmpty(Request.Url.Query))
+                {
+                    url = url.Replace(Request.Url.Query, String.Empty);
+                }
+              
+                Response.Redirect(url);
             }
             else
             {
@@ -49,7 +79,7 @@ namespace NRGTest
 
         private void LoadData(string UID)
         {
-            Registrations registrations = new Registrations().Load(Utility.ConvInt(UID));
+            Registrations registrations = new Registrations(this.Context).Load(Utility.ConvInt(UID));
             txtAdd1.Text = registrations.Address1;
             txtAdd2.Text = registrations.Address2;
             txtCity.Text = registrations.City;
@@ -61,6 +91,56 @@ namespace NRGTest
             ddlState.SelectedValue = registrations.StateCode;
             txtZip.Text = registrations.Zip;
             hfUID.Value = registrations.UID.ToString();
+        }
+
+        #endregion
+
+
+        #region web method
+
+        private static List<Registrations> BindFilter(string filter)
+        {
+            List<Registrations> registrations = new Registrations(HttpContext.Current).LoadAll();
+
+            List<Registrations> _filter = new List<Registrations>();
+            if (!string.IsNullOrEmpty(filter))
+            {
+                foreach (var x in registrations)
+                {
+                    if (x.FirstName.ToLower().Contains(filter)
+                        || x.LastName.ToLower().Contains(filter)
+                            || x.Email.ToLower().Contains(filter))
+                    {
+                        _filter.Add(x);
+                    }
+
+                }
+            }
+            else
+            {
+                _filter = registrations;
+            }
+
+            return _filter;
+
+        }
+
+
+        [WebMethod]
+        public static string LoadUserControl(string filter)
+        {
+            var filtered = BindFilter(filter);
+
+            string table = string.Empty;
+            foreach (var c in filtered)
+            {
+                table = table + "<tr><td>" + c.FullName + "</td><td>" + c.Email + "</td><td><a href=register.aspx?action=edit&uid=" + c.UID + ">edit</a></td></tr>";
+            }
+
+            table = "<table class='table'>" + table + "</table>";
+
+            return table;
+
         }
 
         #endregion

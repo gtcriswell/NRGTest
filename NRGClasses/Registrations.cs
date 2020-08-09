@@ -1,17 +1,31 @@
 ﻿using Microsoft.SqlServer.Server;
 using NRGBusiness;
+using NRGBusiness.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace NRGClasses
 {
+    [Serializable]
     [SaveProcedure("sp_NRGFormSave")]
     [LoadProcedure("sp_NRGFormLoad")]
     public class Registrations
     {
+        public HttpContext _context;
+        public Registrations(HttpContext context)
+        {
+            _context = context;
+        }
+
+        public Registrations()
+        {
+        }
+
         [LoadAttribute("@UID", System.Data.SqlDbType.Int)]
         [SaveAttribute("@UID", System.Data.SqlDbType.Int)]
         [ColMapping("UID")]
@@ -40,7 +54,7 @@ namespace NRGClasses
         {
             get
             {
-                if(DateOfBirth.HasValue)
+                if (DateOfBirth.HasValue)
                 {
                     return DateOfBirth.Value.ToString("MM/dd/yyyy");
                 }
@@ -68,6 +82,30 @@ namespace NRGClasses
         [ColMapping("Zip")]
         public string Zip { get; set; }
 
+
+        public string FullName
+        {
+
+            get
+            {
+                if(!String.IsNullOrEmpty(FirstName) && !string.IsNullOrEmpty(LastName))
+                {
+                    return FirstName + ", " + LastName;
+
+                }
+                if (!String.IsNullOrEmpty(FirstName))
+                {
+                    return FirstName;
+
+                }
+                if (!String.IsNullOrEmpty(LastName))
+                {
+                    return LastName;
+
+                }
+                return string.Empty;
+            }
+        }
 
         [ColMapping("DateAdded")]
         public DateTime DateAdded { get; set; }
@@ -97,21 +135,51 @@ namespace NRGClasses
             return new Registrations();
         }
 
-        public static List<Registrations> LoadAll()
+        private void LoadAllThread()
         {
+
+
+            Task.Run(() =>
+            {
+                LoadAll();
+            });
+        }
+
+        public List<Registrations> LoadAll()
+        {
+            CacheHelper cacheHelper = new CacheHelper(this._context);
+            Object _cacheHelper = cacheHelper.GetObject(CacheName.Registrations);
+            if (_cacheHelper != null)
+            {
+                List<Registrations> _result = (List<Registrations>)_cacheHelper;
+                if (_result.Count > 0)
+                {
+                    return _result;
+                }
+            }
             Factory d = new Factory(DBAction.load);
             List<Registrations> fs = (List<Registrations>)d.DataUtility<Registrations>(new Registrations() { UID = 0 });
             if (fs.Count > 0)
             {
+                cacheHelper = new CacheHelper(this._context);
+                cacheHelper.SetKey(CacheName.Registrations, fs);
+
                 return fs;
             }
             return new List<Registrations>();
         }
-        public int Save()
+        public int Save(HttpContext context)
         {
+            this._context = context;
+            //clear cache
+            CacheHelper cacheHelper = new CacheHelper(context);
+            cacheHelper.ResetCache();
 
             Factory d = new Factory(DBAction.save);
             this.UID = (int)d.DataUtility<Registrations>(this);
+
+            LoadAllThread();
+
             return this.UID;
 
         }
