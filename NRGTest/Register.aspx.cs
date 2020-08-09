@@ -96,15 +96,17 @@ namespace NRGTest
         private static List<Registrations> BindFilter(string filter)
         {
             List<Registrations> registrations = new Registrations(HttpContext.Current).LoadAll();
-
             List<Registrations> _filter = new List<Registrations>();
+
+            filter = Utility.CleanAlphaNumeric(filter);
+
             if (!string.IsNullOrEmpty(filter))
             {
                 foreach (var x in registrations)
                 {
-                    if (x.FirstName.ToLower().Contains(filter)
-                        || x.LastName.ToLower().Contains(filter)
-                            || x.Email.ToLower().Contains(filter))
+                    if (Utility.CleanAlphaNumeric(x.FirstName).ToLower().Contains(filter.ToLower())
+                        || Utility.CleanAlphaNumeric(x.LastName).ToLower().Contains(filter.ToLower())
+                            || Utility.CleanAlphaNumeric(x.Email).ToLower().Contains(filter.ToLower()))
                     {
                         _filter.Add(x);
                     }
@@ -127,12 +129,17 @@ namespace NRGTest
             var filtered = BindFilter(filter);
 
             string table = string.Empty;
+            string header = "<tr><td>Name</td><td>Email</td><td>City</td><td>State</td></tr>";
             foreach (var c in filtered)
             {
-                table = table + "<tr><td>" + c.FullName + "</td><td>" + c.Email + "</td><td><a href=register.aspx?action=edit&uid=" + c.UID + ">edit</a></td></tr>";
+                table = table + "<tr>" +
+                    "<td>" + c.FullName + "</td><td>" + c.Email + "</td>" +
+                     //"<td><a href=register.aspx?action=edit&uid=" + c.UID + ">edit</a></td>" +
+                     "<td>" + c.City + "</td><td>" + c.StateCode + "</td>" +
+                    "</tr>";
             }
 
-            table = "<table class='table'>" + table + "</table>";
+            table = "<table class='table'>" + header+ table + "</table>";
 
             return table;
 

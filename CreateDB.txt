@@ -223,7 +223,8 @@ Zip,
 DateAdded,
 DateUpdated
 from [tblRegistration]
-where uid = @uid or @uid = 0;
+where uid = @uid or @uid = 0
+order by LastName;
 
 CLOSE SYMMETRIC KEY SymKey_SSN;
 

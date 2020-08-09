@@ -186,6 +186,18 @@ namespace NRGBusiness
             return Regex.Replace(o.ToString(), "[^0-9.]", "");
         }
 
+        public static string CleanAlphaNumeric(object o)
+        {
+            if (o == null)
+            {
+                return string.Empty;
+            }
+            Regex rgx = new Regex("[^a-zA-Z0-9 -]");
+            return rgx.Replace(o.ToString(), "");
+        }
+
+
+
         #endregion
 
         public static bool IsValidZip(object zipcode)

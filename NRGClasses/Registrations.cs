@@ -104,8 +104,18 @@ namespace NRGClasses
         }
 
         [ColMapping("DateAdded")]
-        public DateTime DateAdded { get; set; }
-
+        public DateTime? DateAdded { get; set; }
+        public string DateAddedFormatted
+        {
+            get
+            {
+                if(DateAdded.HasValue)
+                {
+                    return DateAdded.Value.ToString("MM/dd/yy");
+                }
+                return string.Empty;
+            }
+        }
 
         [ColMapping("DateUpdated")]
         public DateTime DateUpdated { get; set; }

@@ -127,10 +127,11 @@
             </div>
             <div class="form-row align-items-center justify-content-center">
                 <div class="col-12 pad1">
-                  
+
                     <br />
                     <asp:Button ID="btnSaveRegistration" CausesValidation="true" runat="server" ValidationGroup="form" CssClass="btn btn-primary" Text="Complete Registration" OnClick="btnSaveRegistration_Click" />
-                    &nbsp;<a href="Register.aspx" class="btn btn-primary">Clear Form</a> &nbsp; &nbsp;  <asp:Label ID="lblMessage" class="align-content-center text-info" runat="server" Text=""></asp:Label>
+                    &nbsp;<a href="Register.aspx" class="btn btn-primary">Clear Form</a> &nbsp; &nbsp; 
+                    <asp:Label ID="lblMessage" class="align-content-center text-info" runat="server" Text=""></asp:Label>
                     <br />
 
 
@@ -148,7 +149,7 @@
         <div class="col-3"></div>
         <div class="col-6">
 
-                    <h6>Currently Registered</h6>
+            <h6>Currently Registered</h6>
 
             <input id="txtSearch" name="txtSearch" onkeyup="LoadRegistrations();" placeholder="Start typing to filter by name or email ..." class="form-control" type="text" />
             <br />
@@ -171,11 +172,14 @@
 
         function LoadRegistrations() {
 
+            var str = $("#txtSearch").val();
+            str = str.replace(/[^a-zA-Z 0-9]+/g, '');
+
 
             $.ajax({
                 type: "POST",
                 url: "Register.aspx/LoadUserControl",
-                data: "{filter: '" + $("#txtSearch").val() + "'}",
+                data: "{filter: '" + str + "'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (r) {
