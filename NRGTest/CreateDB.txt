@@ -1,0 +1,286 @@
+﻿USE [master]
+GO
+
+/****** Object:  Database [NRGForm]    Script Date: 8/8/2020 9:21:48 PM ******/
+CREATE DATABASE [NRGForm]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'NRGForm', FILENAME = N'C:\Projects\NRGTest\NRGForm.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'NRGForm_log', FILENAME = N'C:\Projects\NRGTest\NRGForm_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT
+GO
+
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [NRGForm].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+
+ALTER DATABASE [NRGForm] SET ANSI_NULL_DEFAULT OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET ANSI_NULLS OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET ANSI_PADDING OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET ANSI_WARNINGS OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET ARITHABORT OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET AUTO_CLOSE OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET AUTO_SHRINK OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET AUTO_UPDATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [NRGForm] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET CURSOR_DEFAULT  GLOBAL 
+GO
+
+ALTER DATABASE [NRGForm] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET NUMERIC_ROUNDABORT OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET QUOTED_IDENTIFIER OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET RECURSIVE_TRIGGERS OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET  DISABLE_BROKER 
+GO
+
+ALTER DATABASE [NRGForm] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET TRUSTWORTHY OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET PARAMETERIZATION SIMPLE 
+GO
+
+ALTER DATABASE [NRGForm] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET HONOR_BROKER_PRIORITY OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET RECOVERY FULL 
+GO
+
+ALTER DATABASE [NRGForm] SET  MULTI_USER 
+GO
+
+ALTER DATABASE [NRGForm] SET PAGE_VERIFY CHECKSUM  
+GO
+
+ALTER DATABASE [NRGForm] SET DB_CHAINING OFF 
+GO
+
+ALTER DATABASE [NRGForm] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+
+ALTER DATABASE [NRGForm] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+
+ALTER DATABASE [NRGForm] SET DELAYED_DURABILITY = DISABLED 
+GO
+
+ALTER DATABASE [NRGForm] SET QUERY_STORE = OFF
+GO
+
+ALTER DATABASE [NRGForm] SET  READ_WRITE 
+GO
+
+USE NRGForm
+GO
+
+
+--security
+GO
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'C0c@C0l@1';
+
+SELECT name KeyName, 
+    symmetric_key_id KeyID, 
+    key_length KeyLength, 
+    algorithm_desc KeyAlgorithm
+FROM sys.symmetric_keys;
+
+CREATE CERTIFICATE Certificate_SSN WITH SUBJECT = 'Secure SSN';
+
+SELECT name CertName, 
+    certificate_id CertID, 
+    pvt_key_encryption_type_desc EncryptType, 
+    issuer_name Issuer
+FROM sys.certificates;
+
+CREATE SYMMETRIC KEY SymKey_SSN WITH ALGORITHM = AES_256 ENCRYPTION BY CERTIFICATE Certificate_SSN;
+
+SELECT name KeyName, 
+    symmetric_key_id KeyID, 
+    key_length KeyLength, 
+    algorithm_desc KeyAlgorithm
+FROM sys.symmetric_keys;
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_NRGFormSave]    Script Date: 8/8/2020 9:19:14 PM ******/
+DROP PROCEDURE [dbo].[sp_NRGFormSave]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_NRGFormLoad]    Script Date: 8/8/2020 9:19:14 PM ******/
+DROP PROCEDURE [dbo].[sp_NRGFormLoad]
+GO
+/****** Object:  Table [dbo].[tblRegistration]    Script Date: 8/8/2020 9:19:14 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tblRegistration]') AND type in (N'U'))
+DROP TABLE [dbo].[tblRegistration]
+GO
+/****** Object:  Table [dbo].[tblRegistration]    Script Date: 8/8/2020 9:19:14 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tblRegistration](
+	[UID] [int] IDENTITY(1,1) NOT NULL,
+	[FirstName] [varchar](50) NULL,
+	[LastName] [varchar](50) NULL,
+	[Email] [varchar](50) NULL,
+	[SSN] [varbinary](max) NULL,
+	[DateOfBirth] [date] NULL,
+	[Address1] [varchar](75) NULL,
+	[Address2] [varchar](75) NULL,
+	[City] [varchar](50) NULL,
+	[StateCode] [varchar](10) NULL,
+	[Zip] [varchar](10) NULL,
+	[DateAdded] [date] NULL,
+	[DateUpdated] [date] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[tblRegistration] ON 
+GO
+INSERT [dbo].[tblRegistration] ([UID], [FirstName], [LastName], [Email], [SSN], [DateOfBirth], [Address1], [Address2], [City], [StateCode], [Zip], [DateAdded], [DateUpdated]) VALUES (4, N'Fred', N'Jones', N'qwerty@test.com', 0x007597D9FCCD8142850DAD112D345C81020000003EE1722804F110569F1D91060047AFF1C82632D5D67699B4A0B4D8B6D00778CDCC0F0C8D303D612F9FDEF86AC770374A, CAST(N'1983-08-06' AS Date), N'1 Main Street', N'', N'Columbia', N'SC', N'09876-1234', NULL, CAST(N'2020-08-08' AS Date))
+GO
+INSERT [dbo].[tblRegistration] ([UID], [FirstName], [LastName], [Email], [SSN], [DateOfBirth], [Address1], [Address2], [City], [StateCode], [Zip], [DateAdded], [DateUpdated]) VALUES (5, N'Jim', N'Smith', N'jims_email@test.com', 0x007597D9FCCD8142850DAD112D345C8102000000F2DC7E0D5328D8B0EC93FFD33D543E8EF1D0CEFA0288DF3A4D0B1F9E9BEB062967DE10FC1351F5A2F19A22D3FBA8D313, CAST(N'2020-08-11' AS Date), N'Some address with characters #$%', N'', N'Greensborro', N'NC', N'45678', NULL, CAST(N'2020-08-08' AS Date))
+GO
+INSERT [dbo].[tblRegistration] ([UID], [FirstName], [LastName], [Email], [SSN], [DateOfBirth], [Address1], [Address2], [City], [StateCode], [Zip], [DateAdded], [DateUpdated]) VALUES (3, N'Test F', N'Test L', N'gtcriswell@yahoo.com', 0x007597D9FCCD8142850DAD112D345C810200000064D697886DC4E28EB94BE245FE76A75AA9EBF8645FE522F2D152A599ECB373FCD201E6E98065ADA1319DE73535F8A78A, CAST(N'1972-08-10' AS Date), N'add1', N'add2', N'Savannah', N'GA', N'12345', CAST(N'2020-08-08' AS Date), CAST(N'2020-08-08' AS Date))
+GO
+INSERT [dbo].[tblRegistration] ([UID], [FirstName], [LastName], [Email], [SSN], [DateOfBirth], [Address1], [Address2], [City], [StateCode], [Zip], [DateAdded], [DateUpdated]) VALUES (6, N'John', N'Doe', N'johnsemail@domain.com', 0x007597D9FCCD8142850DAD112D345C810200000091ADDD6A393DE978E26CC5B3FB2581C2E31CB83168AA26806E3603121723438C4A9A4008E38746BEEF1F627F0A4240C1, CAST(N'2020-08-03' AS Date), N'Street 1', N'', N'Charlotte', N'NC', N'28097', NULL, CAST(N'2020-08-08' AS Date))
+GO
+INSERT [dbo].[tblRegistration] ([UID], [FirstName], [LastName], [Email], [SSN], [DateOfBirth], [Address1], [Address2], [City], [StateCode], [Zip], [DateAdded], [DateUpdated]) VALUES (7, N'First', N'Last', N'anemail@test.com', 0x007597D9FCCD8142850DAD112D345C810200000042FC989038940AD44F9BAB8B65685C6A5D6406FB92C62507DAA0F93023A53348825CD029B679AF7F518FB9529503B35B, CAST(N'2020-08-03' AS Date), N'Some address', N'Another address', N'Charlotte', N'NC', N'28012', CAST(N'2020-08-08' AS Date), CAST(N'2020-08-08' AS Date))
+GO
+INSERT [dbo].[tblRegistration] ([UID], [FirstName], [LastName], [Email], [SSN], [DateOfBirth], [Address1], [Address2], [City], [StateCode], [Zip], [DateAdded], [DateUpdated]) VALUES (8, N'Jane', N'Doe', N'janesemail@test.com', 0x007597D9FCCD8142850DAD112D345C81020000008DB5AF62459DCF8DF6CA1E18BA4F1F2439E3060323CEC887D0526A61E2F891E0039CF3425BD06B8C3C037C1A387B3DDC, CAST(N'2020-08-25' AS Date), N'Adderss 1', N'Address 2', N'Jacksonville', N'FL', N'32210', CAST(N'2020-08-08' AS Date), CAST(N'2020-08-08' AS Date))
+GO
+INSERT [dbo].[tblRegistration] ([UID], [FirstName], [LastName], [Email], [SSN], [DateOfBirth], [Address1], [Address2], [City], [StateCode], [Zip], [DateAdded], [DateUpdated]) VALUES (9, N'Michelle', N'Smith', N'm_year@yahoo.com', 0x007597D9FCCD8142850DAD112D345C8102000000D4EC8D01D5160934087FDB328B0EF0D4753EEB86EF7841281E7BA5395D976DC6579BBC35EE8C05C16F527A21FE967E79, CAST(N'1976-08-05' AS Date), N'Some street ave', N'', N'Concord', N'MA', N'01023', CAST(N'2020-08-08' AS Date), CAST(N'2020-08-08' AS Date))
+GO
+INSERT [dbo].[tblRegistration] ([UID], [FirstName], [LastName], [Email], [SSN], [DateOfBirth], [Address1], [Address2], [City], [StateCode], [Zip], [DateAdded], [DateUpdated]) VALUES (10, N'Thomas', N'Johnson', N'tj@furnitire.com', 0x007597D9FCCD8142850DAD112D345C81020000002C5BBE26664C610796A7EE9BBCBFDDE81CC33A16B7096AE102DCE8BF98D797BAF8ACA8AB435FFC568407FFEAC139A708, CAST(N'1965-08-18' AS Date), N'Furniture Lane', N'', N'Gorham', N'ME', N'00987', CAST(N'2020-08-08' AS Date), CAST(N'2020-08-08' AS Date))
+GO
+INSERT [dbo].[tblRegistration] ([UID], [FirstName], [LastName], [Email], [SSN], [DateOfBirth], [Address1], [Address2], [City], [StateCode], [Zip], [DateAdded], [DateUpdated]) VALUES (11, N'Adam', N'West', N'batman@batman.com', 0x007597D9FCCD8142850DAD112D345C81020000008C7D84F1AAEF0DAEF9C4A482B74B91E3346FFB5912A59527A99CEFD694E8497D8C66680BCFEC800712088B55B854A0D4, CAST(N'1955-08-25' AS Date), N'Bat Cave', N'', N'Gotham City', N'NY', N'09876', CAST(N'2020-08-08' AS Date), CAST(N'2020-08-08' AS Date))
+GO
+SET IDENTITY_INSERT [dbo].[tblRegistration] OFF
+GO
+/****** Object:  StoredProcedure [dbo].[sp_NRGFormLoad]    Script Date: 8/8/2020 9:19:14 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[sp_NRGFormLoad](@UID int)
+as
+
+set nocount on;
+
+OPEN SYMMETRIC KEY SymKey_SSN
+        DECRYPTION BY CERTIFICATE Certificate_SSN;
+
+select UID,
+FirstName,
+LastName,
+Email,
+SSN as 'SSN_Encrypted',
+CONVERT(varchar(15), DecryptByKey(SSN)) AS 'SSN',
+DateOfBirth,
+Address1,
+Address2,
+City,
+StateCode,
+Zip,
+DateAdded,
+DateUpdated
+from [tblRegistration]
+where uid = @uid or @uid = 0;
+
+CLOSE SYMMETRIC KEY SymKey_SSN;
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_NRGFormSave]    Script Date: 8/8/2020 9:19:14 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE procedure [dbo].[sp_NRGFormSave](@UID int = 0,
+@FirstName varchar(50) = null,
+@LastName varchar(50) = null,
+@Email varchar(50) = null,
+@SSN varchar(10) = null,
+@DateOfBirth date = null,
+@Address1 varchar(75) = null,
+@Address2 varchar(75) = null,
+@City varchar(50) = null,
+@StateCode varchar(10) = null,
+@Zip varchar(10) = null
+)
+as
+
+set nocount on
+
+--possibly move to a custom validator to avoid duplicates
+if(coalesce(@UID,0)=0) begin
+set @UID = (select max(UID) from [tblRegistration] where Email	=	@Email)
+end
+
+
+if(coalesce(@UID,0)=0) begin
+insert into [dbo].[tblRegistration](DateAdded)
+values(GetDate());
+set @UID = SCOPE_IDENTITY();
+end
+
+OPEN SYMMETRIC KEY SymKey_SSN
+        DECRYPTION BY CERTIFICATE Certificate_SSN;
+
+update [tblRegistration]
+set		
+FirstName	=	@FirstName,
+LastName	=	@LastName,
+Email	=	@Email,
+SSN	= EncryptByKey (Key_GUID('SymKey_SSN'), @SSN),
+DateOfBirth	=	@DateOfBirth,
+Address1	=	@Address1,
+Address2	=	@Address2,
+City	=	@City,
+StateCode	=	@StateCode,
+Zip	=	@Zip,
+DateUpdated	=	getdate()
+where UID = @UID;
+
+CLOSE SYMMETRIC KEY SymKey_SSN;
+
+select @UID
+GO
