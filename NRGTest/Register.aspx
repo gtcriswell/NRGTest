@@ -1,9 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master_Page.Master" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="NRGTest.Register" %>
 
-<%@ Register Src="~/UserControls/_RegistrationList.ascx" TagPrefix="uc1" TagName="_RegistrationList" %>
-
-
-
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <link href="Content/bootstrap.css" rel="stylesheet" />

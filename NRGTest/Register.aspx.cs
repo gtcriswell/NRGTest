@@ -1,16 +1,11 @@
-﻿using System;
+﻿using NRGBusiness;
+using NRGClasses;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using NRGBusiness;
-using NRGClasses;
-using NRGTest.UserControls;
 
 namespace NRGTest
 {
@@ -44,7 +39,7 @@ namespace NRGTest
 
             if (Page.IsValid)
             {
-                Registrations registrations = new Registrations(this.Context);
+                Registrations registrations = new Registrations(Context);
                 registrations = registrations.Load(Utility.ConvInt(hfUID.Value));
                 registrations.UID = Utility.ConvInt(hfUID.Value);
 
@@ -58,14 +53,14 @@ namespace NRGTest
                 registrations.SSN = txtSSN.Text;
                 registrations.StateCode = ddlState.SelectedValue;
                 registrations.Zip = txtZip.Text;
-                registrations.UID = registrations.Save(this.Context);
+                registrations.UID = registrations.Save(Context);
 
                 string url = Request.Url.AbsoluteUri;
                 if (!String.IsNullOrEmpty(Request.Url.Query))
                 {
                     url = url.Replace(Request.Url.Query, String.Empty);
                 }
-              
+
                 Response.Redirect(url);
             }
             else
@@ -79,7 +74,7 @@ namespace NRGTest
 
         private void LoadData(string UID)
         {
-            Registrations registrations = new Registrations(this.Context).Load(Utility.ConvInt(UID));
+            Registrations registrations = new Registrations(Context).Load(Utility.ConvInt(UID));
             txtAdd1.Text = registrations.Address1;
             txtAdd2.Text = registrations.Address2;
             txtCity.Text = registrations.City;

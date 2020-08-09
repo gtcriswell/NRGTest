@@ -17,7 +17,7 @@ namespace NRGBusiness
         {
             get
             {
-                if(_ConnectionString==null)
+                if (_ConnectionString == null)
                 {
                     _ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
                 }

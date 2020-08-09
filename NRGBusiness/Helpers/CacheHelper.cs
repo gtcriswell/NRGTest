@@ -1,11 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Web;
 
 namespace NRGBusiness.Helpers
 {
@@ -21,7 +14,7 @@ namespace NRGBusiness.Helpers
         {
             if (_context != null)
             {
-                if (value!=null)
+                if (value != null)
                 {
                     _context.Cache[key.ToString()] = value;
                 }

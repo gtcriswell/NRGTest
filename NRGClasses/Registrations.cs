@@ -1,11 +1,7 @@
-﻿using Microsoft.SqlServer.Server;
-using NRGBusiness;
+﻿using NRGBusiness;
 using NRGBusiness.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -88,7 +84,7 @@ namespace NRGClasses
 
             get
             {
-                if(!String.IsNullOrEmpty(FirstName) && !string.IsNullOrEmpty(LastName))
+                if (!String.IsNullOrEmpty(FirstName) && !string.IsNullOrEmpty(LastName))
                 {
                     return FirstName + ", " + LastName;
 
@@ -147,7 +143,7 @@ namespace NRGClasses
 
         public List<Registrations> LoadAll()
         {
-            CacheHelper cacheHelper = new CacheHelper(this._context);
+            CacheHelper cacheHelper = new CacheHelper(_context);
             Object _cacheHelper = cacheHelper.GetObject(CacheName.Registrations);
             if (_cacheHelper != null)
             {
@@ -161,7 +157,7 @@ namespace NRGClasses
             List<Registrations> fs = (List<Registrations>)d.DataUtility<Registrations>(new Registrations() { UID = 0 });
             if (fs.Count > 0)
             {
-                cacheHelper = new CacheHelper(this._context);
+                cacheHelper = new CacheHelper(_context);
                 cacheHelper.SetKey(CacheName.Registrations, fs);
 
                 return fs;
@@ -170,17 +166,17 @@ namespace NRGClasses
         }
         public int Save(HttpContext context)
         {
-            this._context = context;
+            _context = context;
             //clear cache
             CacheHelper cacheHelper = new CacheHelper(context);
             cacheHelper.ResetCache();
 
             Factory d = new Factory(DBAction.save);
-            this.UID = (int)d.DataUtility<Registrations>(this);
+            UID = (int)d.DataUtility<Registrations>(this);
 
             LoadAllThread();
 
-            return this.UID;
+            return UID;
 
         }
 

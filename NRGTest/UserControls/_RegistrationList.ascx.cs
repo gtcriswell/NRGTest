@@ -1,10 +1,5 @@
 ﻿using NRGClasses;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace NRGTest.UserControls
 {
@@ -23,7 +18,7 @@ namespace NRGTest.UserControls
 
         public void BindData()
         {
-            Registrations registrations = new Registrations(this.Context);
+            Registrations registrations = new Registrations(Context);
             gvRegistrations.DataSource = registrations.LoadAll();
             gvRegistrations.DataBind();
 

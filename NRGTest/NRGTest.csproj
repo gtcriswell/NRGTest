@@ -117,7 +117,6 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="CreateDB.txt" />
     <Content Include="Global.asax" />
     <Content Include="Register.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -222,8 +221,6 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="SSNEncryption.txt" />
-    <Content Include="UserControls\_RegistrationList.ascx" />
     <Content Include="Web.config" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
@@ -254,13 +251,6 @@
     </Compile>
     <Compile Include="Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\_RegistrationList.ascx.cs">
-      <DependentUpon>_RegistrationList.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UserControls\_RegistrationList.ascx.designer.cs">
-      <DependentUpon>_RegistrationList.ascx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
